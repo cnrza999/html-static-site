@@ -7,6 +7,8 @@
     <list default="true" id="bda5f8eb-7060-4ba0-9fd8-55445626c22e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../bookbot" beforeDir="false" afterPath="$PROJECT_DIR$/../bookbot" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/htmlnode.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/htmlnode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test_htmlnode.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_htmlnode.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +61,8 @@
       <workItem from="1741788956857" duration="2081000" />
       <workItem from="1742059582617" duration="627000" />
       <workItem from="1742101745614" duration="3847000" />
-      <workItem from="1742137468142" duration="4603000" />
+      <workItem from="1742137468142" duration="4746000" />
+      <workItem from="1742223072914" duration="1574000" />
     </task>
     <servers />
   </component>
