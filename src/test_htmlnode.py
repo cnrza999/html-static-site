@@ -1,5 +1,5 @@
 import unittest
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_no_prop(self):
@@ -88,6 +88,80 @@ class TestHTMLNode(unittest.TestCase):
         with self.assertRaises(ValueError):
             node = LeafNode("p", "")
             node.to_html()
+
+    def test_valid_parentnode_creation(self):
+        child1 = LeafNode(tag="span", value="Hello")
+        child2 = "World"
+        parent = ParentNode(tag="div", children=[child1, child2])
+        self.assertEqual(parent.tag, "div")
+        self.assertEqual(len(parent.children), 2)
+        self.assertEqual(parent.children[0], child1)
+        self.assertEqual(parent.children[1], child2)
+
+    def test_invalid_tag(self):
+        with self.assertRaises(ValueError):
+            # Invalid tag (empty string)
+            ParentNode(tag="", children=["Child content"])
+
+        with self.assertRaises(ValueError):
+            # Invalid tag (contains special characters)
+            ParentNode(tag="123invalid", children=["Some child"])
+
+    def test_empty_children_list(self):
+        with self.assertRaises(ValueError):
+            # No children provided
+            ParentNode(tag="div", children=[])
+
+    def test_invalid_children_type(self):
+        with self.assertRaises(ValueError):
+            # Children is not a list
+            ParentNode(tag="div", children="Not a list")
+
+        with self.assertRaises(TypeError):
+            # Invalid type inside the children
+            ParentNode(tag="div", children=["Valid string", 123])
+
+    def test_to_html_with_valid_children(self):
+        child1 = LeafNode(tag="p", value="Paragraph")
+        child2 = "Plain text"
+        child3 = LeafNode(tag="a", value="Click me", props={"href": "http://example.com"})
+
+        parent = ParentNode(tag="div", children=[child1, child2, child3])
+        expected_html = (
+            '<div>'
+            '<p>Paragraph</p>'
+            'Plain text'
+            '<a href="http://example.com">Click me</a>'
+            '</div>'
+        )
+        self.assertEqual(parent.to_html(), expected_html)
+
+    def test_to_html_escapes_string_children(self):
+        child = "<script>alert('XSS')</script>"
+        parent = ParentNode(tag="div", children=[child])
+        expected_html = (
+            '<div>&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;</div>'
+        )
+        self.assertEqual(parent.to_html(), expected_html)
+
+    def test_props_handling(self):
+        child = LeafNode(tag="span", value="Child text")
+        parent = ParentNode(tag="div", children=[child], props={"class": "container", "id": "main"})
+
+        expected_html = '<div class="container" id="main"><span>Child text</span></div>'
+        self.assertEqual(parent.to_html(), expected_html)
+
+    def test_empty_props(self):
+        child = LeafNode(tag="span", value="Child text")
+        parent = ParentNode(tag="div", children=[child])
+
+        expected_html = '<div><span>Child text</span></div>'
+        self.assertEqual(parent.to_html(), expected_html)
+
+    def test_htmlnode_inheritance(self):
+        # Ensuring ParentNode maintains compatibility with functions expecting HTMLNode
+        html_node = ParentNode(tag="section", children=["Some content"])
+        self.assertIsInstance(html_node, HTMLNode)
 
 
 if __name__ == "__main__":
