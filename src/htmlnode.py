@@ -1,5 +1,6 @@
 import re
 import html
+from textnode import TextNode, TextType
 
 VALID_TAG_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*$")
 
@@ -72,4 +73,39 @@ class ParentNode(HTMLNode):
         )
         return f"<{self.tag}{self.props_to_html()}>{children_html}</{self.tag}>"
 
-    
+def text_node_to_html_node(text_node):
+    if not isinstance(text_node, TextNode):
+        raise ValueError("Input must be an instance of TextNode")
+
+    if text_node.text_type == TextType.TEXT:
+        # No tag, just raw text
+        return LeafNode(tag=None, value=text_node.text)
+
+    elif text_node.text_type == TextType.BOLD:
+        # "b" tag with text
+        return LeafNode(tag="b", value=text_node.text)
+
+    elif text_node.text_type == TextType.ITALIC:
+        # "i" tag with text
+        return LeafNode(tag="i", value=text_node.text)
+
+    elif text_node.text_type == TextType.CODE:
+        # "code" tag with text
+        return LeafNode(tag="code", value=text_node.text)
+
+    elif text_node.text_type == TextType.LINK:
+        # "a" tag with text and "href" prop
+        if not text_node.url:
+            raise ValueError("TextNode of type LINK must have a URL")
+        return LeafNode(tag="a", value=text_node.text, props={"href": text_node.url})
+
+    elif text_node.text_type == TextType.IMAGE:
+        # "img" tag with "src" and "alt" props
+        if not text_node.url:
+            raise ValueError("TextNode of type IMAGE must have a URL for 'src'")
+        return LeafNode(tag="img", value="", props={"src": text_node.url, "alt": text_node.text})
+
+    else:
+        # Raise an error for unsupported TextType
+        raise ValueError(f"Unsupported TextType: {text_node.text_type}")
+
