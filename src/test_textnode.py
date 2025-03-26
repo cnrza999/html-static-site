@@ -1,7 +1,8 @@
 import unittest
 
 from textnode import TextNode, TextType
-from htmlnode import text_node_to_html_node
+from htmlnode import text_node_to_html_node, text_to_textnodes
+
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -125,6 +126,90 @@ class TestTextNode(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             text_node_to_html_node("Not a TextNode")
         self.assertEqual(str(context.exception), "Input must be an instance of TextNode")
+
+    def test_text_with_all_patterns(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        result = text_to_textnodes(text)
+
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+
+        self.assertListEqual(result, expected)
+
+    def test_text_with_no_special_patterns(self):
+        text = "This is plain text with no special formatting."
+        result = text_to_textnodes(text)
+
+        expected = [
+            TextNode("This is plain text with no special formatting.", TextType.TEXT),
+        ]
+
+        self.assertListEqual(result, expected)
+
+    def test_text_only_images(self):
+        text = "An image ![image alt](https://example.com/image.jpg)"
+        result = text_to_textnodes(text)
+
+        expected = [
+            TextNode("An image ", TextType.TEXT),
+            TextNode("image alt", TextType.IMAGE, "https://example.com/image.jpg"),
+        ]
+
+        self.assertListEqual(result, expected)
+
+    def test_text_only_links(self):
+        text = "Visit [Google](https://google.com) for more info."
+        result = text_to_textnodes(text)
+
+        expected = [
+            TextNode("Visit ", TextType.TEXT),
+            TextNode("Google", TextType.LINK, "https://google.com"),
+            TextNode(" for more info.", TextType.TEXT),
+        ]
+
+        self.assertListEqual(result, expected)
+
+    def test_text_with_nested_patterns(self):
+        text = "This is **bold and _italic_** text."
+        result = text_to_textnodes(text)
+
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("bold and _italic_", TextType.BOLD),  # Nested styling assumed to be kept as-is
+            TextNode(" text.", TextType.TEXT),
+        ]
+
+        self.assertListEqual(result, expected)
+
+    def test_text_with_code_block(self):
+        text = "Here is a `code` example."
+        result = text_to_textnodes(text)
+
+        expected = [
+            TextNode("Here is a ", TextType.TEXT),
+            TextNode("code", TextType.CODE),
+            TextNode(" example.", TextType.TEXT),
+        ]
+
+        self.assertListEqual(result, expected)
+
+    def test_empty_text(self):
+        text = ""
+        result = text_to_textnodes(text)
+
+        expected = []
+
+        self.assertListEqual(result, expected)
 
 
 if __name__ == "__main__":

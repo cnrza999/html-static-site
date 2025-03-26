@@ -1,6 +1,7 @@
 import re
 import html
 from textnode import TextNode, TextType
+from splitnode import split_nodes_link, split_nodes_image, split_nodes_delimiter
 
 VALID_TAG_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*$")
 
@@ -109,3 +110,15 @@ def text_node_to_html_node(text_node):
         # Raise an error for unsupported TextType
         raise ValueError(f"Unsupported TextType: {text_node.text_type}")
 
+def text_to_textnodes(text):
+    # Initialize the text as a single text node
+    nodes = [TextNode(text, TextType.TEXT)]
+
+    # Use each split function one after the other
+    nodes = split_nodes_image(nodes)  # Process images
+    nodes = split_nodes_link(nodes)  # Process links
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)  # Process bold text
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)  # Process italic text
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)  # Process code blocks
+
+    return nodes
