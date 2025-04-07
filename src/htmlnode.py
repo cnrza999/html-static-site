@@ -1,78 +1,59 @@
-import re
-import html
 from textnode import TextNode, TextType
 from splitnode import split_nodes_link, split_nodes_image, split_nodes_delimiter
 
-VALID_TAG_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9]*$")
-
-class HTMLNode():
+class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
         self.value = value
-        self.children = children if children is not None else []
-        self.props = props if props is not None else {}
+        self.children = children
+        self.props = props
 
     def to_html(self):
-        if not self.tag:
-            raise ValueError("HTMLNode must have a non-empty tag.")
-
-        if self.children is None:
-            raise ValueError("HTMLNode must have children defined (even if empty).")
-
-        # Process children recursively
-        children_html = "".join(
-            child.to_html() if isinstance(child, HTMLNode) else str(child)
-            for child in self.children
-        )
-
-        return f"<{self.tag}{self.props_to_html()}>{children_html}</{self.tag}>"
+        raise NotImplementedError("to_html method not implemented")
 
     def props_to_html(self):
-        if not self.props:
+        if self.props is None:
             return ""
-        return " " + " ".join(
-        f'{key.strip()}="{value.strip()}"' if not isinstance(value, bool) else f'{key.strip()}' for key, value in self.props.items()
-    )
+        props_html = ""
+        for prop in self.props:
+            props_html += f' {prop}="{self.props[prop]}"'
+        return props_html
 
     def __repr__(self):
-        return (
-            f"HTMLNode(tag={self.tag!r}, value={self.value!r}, "
-            f"children={len(self.children)} children, props={self.props!r})"
-        )
+        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
+
 
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
-        super().__init__(tag=tag, value=value, children=[], props=props)
+        super().__init__(tag, value, None, props)
 
     def to_html(self):
-        if not self.value:
-            raise ValueError("LeafNode must have a non-empty value.")
-
+        if self.value is None:
+            raise ValueError("invalid HTML: no value")
         if self.tag is None:
             return self.value
-
-        # Render HTML with props and tag
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
+
 
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props=None):
-        if not tag or not VALID_TAG_RE.match(tag):
-            raise ValueError("ParentNode must have a valid HTML tag name (e.g., letters and digits only).")
-        if not children or not isinstance(children, list):
-            raise ValueError("ParentNode must have at least one child and children must be a list.")
-        for child in children:
-            if not isinstance(child, (HTMLNode, str)):
-                raise TypeError("All children of ParentNode must be either HTMLNode instances or strings.")
-        super().__init__(tag=tag, children=children, props=props or {})
+        super().__init__(tag, None, children, props)
 
     def to_html(self):
-        if not self.tag:
-            raise ValueError("ParentNode must have a non-empty tag.")
-        children_html = "".join(
-            child.to_html() if isinstance(child, HTMLNode) else html.escape(str(child))
-            for child in self.children
-        )
+        if self.tag is None:
+            raise ValueError("invalid HTML: no tag")
+        if self.children is None:
+            raise ValueError("invalid HTML: no children")
+        children_html = ""
+        for child in self.children:
+            children_html += child.to_html()
         return f"<{self.tag}{self.props_to_html()}>{children_html}</{self.tag}>"
+
+    def __repr__(self):
+        return f"ParentNode({self.tag}, children: {self.children}, {self.props})"
 
 def text_node_to_html_node(text_node):
     if not isinstance(text_node, TextNode):

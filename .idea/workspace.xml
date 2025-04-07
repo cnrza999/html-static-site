@@ -5,12 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bda5f8eb-7060-4ba0-9fd8-55445626c22e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/extract_link_img.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test_extract.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/blocktype.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/copystatic.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test_block.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test_gencontent.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../bookbot" beforeDir="false" afterPath="$PROJECT_DIR$/../bookbot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.sh" beforeDir="false" afterPath="$PROJECT_DIR$/main.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/extract_link_img.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/extract_tag.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/htmlnode.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/htmlnode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_textnode.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_textnode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/splitnode.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/splitnode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test_extract.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_extract.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +85,11 @@
       <workItem from="1742478300747" duration="2477000" />
       <workItem from="1742735495730" duration="4313000" />
       <workItem from="1742914094474" duration="3355000" />
-      <workItem from="1742999736829" duration="1849000" />
+      <workItem from="1742999736829" duration="1925000" />
+      <workItem from="1743608998589" duration="3341000" />
+      <workItem from="1743949646191" duration="1490000" />
+      <workItem from="1743996155414" duration="11092000" />
+      <workItem from="1744009540365" duration="2006000" />
     </task>
     <servers />
   </component>
