@@ -1,4 +1,4 @@
-from gencontent import generate_page
+from gencontent import generate_page, generate_pages_recursive
 import os
 import shutil
 
@@ -28,11 +28,12 @@ def main():
     copy_static_files(dir_path_static, dir_path_public)
 
     print("Generating page...")
-    generate_page(
-        os.path.join(dir_path_content, "index.md"),
-        template_path,
-        os.path.join(dir_path_public, "index.html")
-    )
+    # generate_page(
+    #     os.path.join(dir_path_content, "index.md"),
+    #     template_path,
+    #     os.path.join(dir_path_public, "index.html")
+    # )
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public)
 
 # Call the main function when the script runs
 if __name__ == "__main__":

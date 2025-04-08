@@ -25,6 +25,23 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w", encoding="utf-8") as dest_file:
         dest_file.write(template)
 
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+
+    for root, _, files in os.walk(dir_path_content):
+        # Calculate the relative path of the current directory
+        relative_path = os.path.relpath(root, dir_path_content)
+        # Construct the destination directory path
+        dest_subdir = os.path.join(dest_dir_path, relative_path)
+
+        for file_name in files:
+            # Process only markdown files
+            if file_name.endswith(".md"):
+                from_path = os.path.join(root, file_name)
+                dest_path = os.path.join(dest_subdir, file_name[:-3] + ".html")  # Replace .md with .html
+                generate_page(from_path, template_path, dest_path)
+
+
 def extract_title(md):
     lines = md.split("\n")
     for line in lines:
